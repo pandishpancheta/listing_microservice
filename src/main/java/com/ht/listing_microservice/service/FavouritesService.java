@@ -23,17 +23,23 @@ public class FavouritesService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Favourites> getFavourites(String id) {
+    public Optional<Favourites> getFavourites(Long id) {
         return favouritesRepository.findById(id);
     }
 
     @Transactional
     public Favourites createFavourites(Favourites favourites) {
+        // Check if the associated Listing is already persisted
+        if (favourites.getListing() != null && favourites.getListing().getId() == null) {
+            throw new IllegalArgumentException("The associated Listing must be persisted before saving Favourites.");
+        }
+        // Save the Favourites entity
         return favouritesRepository.save(favourites);
     }
 
+
     @Transactional
-    public void deleteFavourites(String id) {
+    public void deleteFavourites(Long id) {
         favouritesRepository.deleteById(id);
     }
 }
