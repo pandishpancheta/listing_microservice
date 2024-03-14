@@ -22,8 +22,8 @@ type services struct {
 
 type ListingsService interface {
 	CreateListing(ctx context.Context, req *pb.CreateListingRequest) (*pb.CreateListingResponse, error)
-	ReadListing(ctx context.Context, req *pb.ReadListingRequest) (*pb.ReadListingResponse, error)
-	ReadListings(ctx context.Context, req *emptypb.Empty) (*pb.ReadListingsResponse, error)
+	GetListing(ctx context.Context, req *pb.GetListingRequest) (*pb.GetListingResponse, error)
+	GetListings(ctx context.Context, req *emptypb.Empty) (*pb.GetListingsResponse, error)
 	UpdateListing(ctx context.Context, req *pb.UpdateListingRequest) (*pb.UpdateListingResponse, error)
 	UpdateListingStatus(ctx context.Context, req *pb.UpdateListingStatusRequest) (*pb.UpdateListingStatusResponse, error)
 	DeleteListing(ctx context.Context, req *pb.DeleteListingRequest) (*emptypb.Empty, error)
@@ -95,8 +95,8 @@ func (s *listingsService) CreateListing(ctx context.Context, req *pb.CreateListi
 	return &pb.CreateListingResponse{Id: id.String()}, nil
 }
 
-func (s *listingsService) ReadListing(ctx context.Context, req *pb.ReadListingRequest) (*pb.ReadListingResponse, error) {
-	var listing pb.ReadListingResponse
+func (s *listingsService) GetListing(ctx context.Context, req *pb.GetListingRequest) (*pb.GetListingResponse, error) {
+	var listing pb.GetListingResponse
 	err := s.db.QueryRowContext(ctx, "SELECT id, name, description, price FROM listings WHERE id = $1 AND status = $2", req.Id, "completed").Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price)
 	if err != nil {
 		return nil, err
@@ -105,14 +105,14 @@ func (s *listingsService) ReadListing(ctx context.Context, req *pb.ReadListingRe
 	return &listing, nil
 }
 
-func (s *listingsService) ReadListings(ctx context.Context, req *emptypb.Empty) (*pb.ReadListingsResponse, error) {
+func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (*pb.GetListingsResponse, error) {
 	rows, err := s.db.QueryContext(ctx, "SELECT id, name, description, price FROM listings WHERE status = $1", "completed")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var listings pb.ReadListingsResponse
+	var listings pb.GetListingsResponse
 	for rows.Next() {
 		var listing pb.Listing
 		err = rows.Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price)
