@@ -9,7 +9,7 @@ import (
 	"github.com/pandishpancheta/listing-service/pkg/config"
 )
 
-func Init(cfg config.Config) *sql.DB {
+func Init(cfg *config.Config) *sql.DB {
 	port, err := strconv.Atoi(cfg.DB_PORT)
 	if err != nil {
 		panic(err)
