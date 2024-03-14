@@ -14,16 +14,19 @@ public class Favourites {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @OneToOne
+    @JoinColumn(name = "listing_id")
     private Listing listing;
 
-    //@OneToOne
-    //private User user;
-
-    // Generate random ID
+    // No-args constructor
     public Favourites() {
-        this.id = UUID.randomUUID().toString();
+    }
+
+    // Constructor to generate random UUID
+    public Favourites(Listing listing) {
+        this.id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        this.listing = listing;
     }
 }
