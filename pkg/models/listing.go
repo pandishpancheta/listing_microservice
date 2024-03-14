@@ -30,4 +30,5 @@ type Listing struct {
 	Price       float64   `json:"price"`
 	Status      Status    `json:"status"`
 	Tags        []Tag     `json:"tags"`
+	UserID      uuid.UUID `json:"user_id"`
 }

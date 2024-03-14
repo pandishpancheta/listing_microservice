@@ -87,7 +87,7 @@ func (s *listingsService) CreateListing(ctx context.Context, req *pb.CreateListi
 	}
 
 	// Insert into database
-	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, req.Description, uri, req.Price, "pending")
+	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, req.Description, uri, req.Price, "pending", req.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (
 }
 
 func (s *listingsService) UpdateListing(ctx context.Context, req *pb.UpdateListingRequest) (*pb.UpdateListingResponse, error) {
-	_, err := s.db.ExecContext(ctx, "UPDATE listings SET name = $1, description = $2, price = $3 WHERE id = $4", req.Name, req.Description, req.Price, req.Id)
+	_, err := s.db.ExecContext(ctx, "UPDATE listings SET name = $1, description = $2, price = $3 WHERE id = $4 AND user_id = $5", req.Name, req.Description, req.Price, req.Id, req.UserId)
 	if err != nil {
 		return nil, err
 	}
