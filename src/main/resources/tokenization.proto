@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_package = "com.tokenization.protobuf";
-option java_outer_classname = "listing_microservice";
+option java_outer_classname = "TokenizationServiceProto";
 
 package tokenization;
 
