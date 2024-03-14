@@ -94,7 +94,7 @@ func (c *listingsServiceClient) DeleteListing(ctx context.Context, in *DeleteLis
 }
 
 // ListingsServiceServer is the server API for ListingsService service.
-// All implementations must embed UnimplementedListingsServiceServer
+// All implementations should embed UnimplementedListingsServiceServer
 // for forward compatibility
 type ListingsServiceServer interface {
 	CreateListing(context.Context, *CreateListingRequest) (*CreateListingResponse, error)
@@ -103,10 +103,9 @@ type ListingsServiceServer interface {
 	UpdateListing(context.Context, *UpdateListingRequest) (*UpdateListingResponse, error)
 	UpdateListingStatus(context.Context, *UpdateListingStatusRequest) (*UpdateListingStatusResponse, error)
 	DeleteListing(context.Context, *DeleteListingRequest) (*emptypb.Empty, error)
-	mustEmbedUnimplementedListingsServiceServer()
 }
 
-// UnimplementedListingsServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedListingsServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedListingsServiceServer struct {
 }
 
@@ -128,7 +127,6 @@ func (UnimplementedListingsServiceServer) UpdateListingStatus(context.Context, *
 func (UnimplementedListingsServiceServer) DeleteListing(context.Context, *DeleteListingRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteListing not implemented")
 }
-func (UnimplementedListingsServiceServer) mustEmbedUnimplementedListingsServiceServer() {}
 
 // UnsafeListingsServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to ListingsServiceServer will
