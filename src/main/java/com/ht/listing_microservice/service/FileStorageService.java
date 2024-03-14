@@ -19,21 +19,14 @@ public class FileStorageService {
     }
 
     @Transactional
-    public URI saveFile(byte[] fileBytes) {
-        // Create a new FileEntity instance
-        FileEntity fileEntity = new FileEntity();
-        fileEntity.setData(fileBytes);
+    public String saveFile(UUID tokenId, byte[] fileBytes) {
+        TokenizationRequest tokenizationRequest = TokenizationRequestOrBuilder.newBuilder()
+                .setTokenId(tokenId.toString())
+                .setFileBytes(ByteString.copyFrom(fileBytes))
+                .build();
 
-        // Save the file entity to the database
-        FileEntity savedEntity = fileRepository.save(fileEntity);
-
-        // Generate URI for the saved file
-        String fileName = "file-" + savedEntity.getId(); // You can customize the file name as needed
-        String fileUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/files/")
-                .path(fileName)
-                .toUriString();
-
-        return URI.create(fileUri);
+        TokenizationResponse tokenizationResponse = tokenizationServiceBlockingStub.tokenize(tokenizationRequest);
+        
+        return tokenizationResponse.getTokenURI();
     }
 }
