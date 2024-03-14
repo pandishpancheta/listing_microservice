@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "github.com/pandishpancheta/tokenization-service/pkg/pb/tokenization";
+
+package tokenization;
+
+service TokenizationService {
+  rpc Tokenize(TokenizationRequest) returns (TokenizationResponse) {}
+}
+
+message TokenizationRequest {
+  string tokenId = 1;
+  bytes chunk = 2;
+}
+
+message TokenizationResponse {
+  string tokenURI = 1;
+}
