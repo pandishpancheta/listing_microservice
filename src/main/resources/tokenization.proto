@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "com.tokenization.protobuf";
+option java_outer_classname = "listing_microservice";
+
+package tokenization;
+
+service TokenizationService {
+  rpc Tokenize(TokenizationRequest) returns (TokenizationResponse) {}
+}
+
+message TokenizationRequest {
+  string tokenId = 1;
+  bytes chunk = 2;
+}
+
+message TokenizationResponse {
+  string tokenURI = 1;
+}
