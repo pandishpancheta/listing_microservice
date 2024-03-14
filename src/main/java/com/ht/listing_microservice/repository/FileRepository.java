@@ -1,2 +1,10 @@
-package com.ht.listing_microservice.repository;public interface FileRepository {
+package com.ht.listing_microservice.repository;
+
+import com.ht.listing_microservice.entity.FileEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface FileRepository extends JpaRepository<FileEntity, Long> {
 }
+
