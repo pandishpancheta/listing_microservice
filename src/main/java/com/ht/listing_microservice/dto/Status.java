@@ -1,5 +1,7 @@
 package com.ht.listing_microservice.dto;
 
+import lombok.AllArgsConstructor;
+
 public enum Status {
     COMPLETED,
     PENDING,

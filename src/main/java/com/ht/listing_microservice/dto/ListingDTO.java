@@ -1,12 +1,17 @@
 package com.ht.listing_microservice.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ListingDTO {
-    private Long id;
+    private UUID id;
     private String name;
     private String description;
     private String watermarkUri;
@@ -14,13 +19,4 @@ public class ListingDTO {
     private Float price; // ? not sure big decimal!!!
     private String status;
     private List<String> tags;
-
-    // Getter and Setter for status
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }
