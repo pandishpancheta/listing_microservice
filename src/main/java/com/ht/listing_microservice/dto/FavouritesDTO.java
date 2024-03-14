@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class FavouritesDTO {
-    private String id;
-    private ListingDTO listing; // maybe listing id => String id
+    private Long id;
+    private Long listingId; // maybe listing id => String id
     //private User user; // ? not sure
 }
