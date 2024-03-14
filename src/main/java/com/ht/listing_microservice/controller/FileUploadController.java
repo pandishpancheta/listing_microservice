@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,9 +34,9 @@ public class FileUploadController {
             byte[] fileBytes = file.getBytes();
 
             // Save byte array to database
-            URI uri = fileStorageService.saveFile(fileBytes);
+//            URI uri = fileStorageService.saveFile(UUIDfileBytes);
 
-            return ResponseEntity.ok("File uploaded successfully. URI: " + uri);
+            return ResponseEntity.ok("File uploaded successfully. URI: " + "uri");
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");

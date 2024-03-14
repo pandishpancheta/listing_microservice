@@ -1,13 +1,11 @@
 package com.ht.listing_microservice.service;
 
-import com.ht.listing_microservice.entity.FileEntity;
+import com.google.protobuf.ByteString;
 import com.ht.listing_microservice.repository.FileRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
+import java.util.UUID;
 
 @Service
 public class FileStorageService {
@@ -20,13 +18,13 @@ public class FileStorageService {
 
     @Transactional
     public String saveFile(UUID tokenId, byte[] fileBytes) {
-        TokenizationRequest tokenizationRequest = TokenizationRequestOrBuilder.newBuilder()
-                .setTokenId(tokenId.toString())
-                .setFileBytes(ByteString.copyFrom(fileBytes))
-                .build();
+//        TokenizationServiceProto.TokenizationRequest tokenizationRequest = TokenizationServiceProto.TokenizationRequest.newBuilder()
+//                .setTokenId(String.valueOf(tokenId))
+//                .setChunk(ByteString.copyFrom(fileBytes))
+//                .build();
+//        TokenizationServiceProto.TokenizationResponse tokenizationResponse = TokenizationServic.getDescriptor().
 
-        TokenizationResponse tokenizationResponse = tokenizationServiceBlockingStub.tokenize(tokenizationRequest);
-        
-        return tokenizationResponse.getTokenURI();
+//        return tokenizationResponse.getTokenURI();
+        return "";
     }
 }

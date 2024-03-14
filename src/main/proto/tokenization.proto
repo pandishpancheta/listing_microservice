@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_package = "com.ht.listing_microservice.grpc";
-option java_outer_classname = "TokenizationServiceGrpc";
+option java_outer_classname = "TokenizationServiceProto";
 
 package tokenization;
 

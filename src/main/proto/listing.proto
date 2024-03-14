@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option java_package = "com.ht.listing_microservice.grpc";
-option java_outer_classname = "ListingServiceGrpc";
+option java_package = "com.listing.protobuf";
+option java_outer_classname = "listing_microservice";
 
 package listing;
 
