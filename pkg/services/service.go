@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"database/sql"
+	"log"
+
 	"github.com/google/generative-ai-go/genai"
 	"github.com/pandishpancheta/listing-service/pkg/ai"
 
@@ -114,6 +116,10 @@ func (s *listingsService) GetListing(ctx context.Context, req *pb.GetListingRequ
 func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (*pb.GetListingsResponse, error) {
 	rows, err := s.db.QueryContext(ctx, "SELECT id, name, description, price FROM listings WHERE status = $1", "completed")
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return &pb.GetListingsResponse{}, nil
+		}
+
 		return nil, err
 	}
 	defer rows.Close()
@@ -123,6 +129,7 @@ func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (
 		var listing pb.Listing
 		err = rows.Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price)
 		if err != nil {
+			log.Println(err)
 			return nil, err
 		}
 		listings.Listings = append(listings.Listings, &listing)

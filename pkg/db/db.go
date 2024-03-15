@@ -37,7 +37,7 @@ func InitTables(db *sql.DB) {
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS listings (
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		id UUID PRIMARY KEY,
-		title TEXT,
+		name TEXT,
 		description TEXT,
 		price INT,
 		status TEXT
