@@ -40,8 +40,6 @@ func InitTables(db *sql.DB) {
 		title TEXT,
 		description TEXT,
 		price INT,
-		created_at TIMESTAMP,
-		updated_at TIMESTAMP,
 		status TEXT
 	)`)
 	if err != nil {
