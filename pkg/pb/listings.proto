@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package listings;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "./pkg/pb";
+
+message Tag {
+    string id = 1;
+    string name = 2;
+}
+
+message Listing {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string price = 4;
+    string uri = 5;
+    string created_at = 6;
+    string updated_at = 7;
+    repeated Tag tags = 8;
+}
+
+service ListingsService {
+    rpc CreateListing(CreateListingRequest) returns (CreateListingResponse) {}
+    rpc GetListing(GetListingRequest) returns (GetListingResponse) {}
+    rpc GetListings(google.protobuf.Empty) returns (GetListingsResponse) {}
+    rpc UpdateListing(UpdateListingRequest) returns (UpdateListingResponse) {}
+    rpc UpdateListingStatus(UpdateListingStatusRequest) returns (UpdateListingStatusResponse) {}
+    rpc DeleteListing(DeleteListingRequest) returns (google.protobuf.Empty) {}
+}
+
+message CreateListingRequest {
+    string name = 1;
+    string description = 2;
+    string price = 3;
+    bytes chunk = 4;
+    repeated string tag_names = 5;
+    string user_id = 6;
+}
+
+message CreateListingResponse {
+    string id = 1;
+    string uri = 2;
+}
+
+message GetListingRequest {
+    string id = 1;
+}
+
+message GetListingResponse {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string price = 4;
+    string uri = 5;
+    repeated string tag_names = 6;
+    string created_at = 7;
+    string updated_at = 8;
+}
+
+message GetListingsResponse {
+    repeated Listing listings = 1;
+}
+
+message UpdateListingRequest {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string price = 4;
+    repeated string tag_names = 5;
+    string user_id = 6;
+}
+
+message UpdateListingResponse {
+    string id = 1;
+}
+
+message UpdateListingStatusRequest {
+    string id = 1;
+    string status = 2;
+}
+
+message UpdateListingStatusResponse {
+    string id = 1;
+}
+
+message DeleteListingRequest {
+    string id = 1;
+    string user_id = 2;
+}
