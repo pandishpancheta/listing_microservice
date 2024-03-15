@@ -17,7 +17,7 @@ func main() {
 
 	db := db.Init(cfg)
 
-	lis, err := net.Listen("tcp", cfg.TCP_PORT)
+	lis, err := net.Listen("tcp", "localhost:"+cfg.TCP_PORT)
 	if err != nil {
 		panic(err)
 	}
