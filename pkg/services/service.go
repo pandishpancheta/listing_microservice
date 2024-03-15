@@ -117,7 +117,7 @@ func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (
 	rows, err := s.db.QueryContext(ctx, "SELECT id, name, description, price FROM listings WHERE status = $1", "completed")
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return &pb.GetListingsResponse{}, nil
+			return nil, nil
 		}
 
 		return nil, err
