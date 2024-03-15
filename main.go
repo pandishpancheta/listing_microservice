@@ -17,7 +17,8 @@ func main() {
 
 	cfg := config.LoadConfig()
 
-	db := db.Init(cfg)
+	pgdb := db.Init(cfg)
+	db.InitTables(pgdb)
 
 	model := ai.InitModel(cfg)
 
@@ -26,7 +27,7 @@ func main() {
 		panic(err)
 	}
 
-	ls := services.NewListingsService(db, cfg, model)
+	ls := services.NewListingsService(pgdb, cfg, model)
 
 	grpcServer := grpc.NewServer()
 

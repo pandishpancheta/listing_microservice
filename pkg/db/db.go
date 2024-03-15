@@ -32,3 +32,37 @@ func Init(cfg *config.Config) *sql.DB {
 	fmt.Println("Successfully connected!")
 	return db
 }
+
+func InitTables(db *sql.DB) {
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS listings (
+		id UUID PRIMARY KEY,
+		title TEXT,
+		description TEXT,
+		price INT,
+		created_at TIMESTAMP,
+		updated_at TIMESTAMP,
+		status TEXT
+	)`)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS tags (
+		id UUID PRIMARY KEY,
+		name TEXT UNIQUE NOT NULL
+	)`)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS listing_tags (
+		listing_id UUID,
+		tag_id UUID,
+		PRIMARY KEY (listing_id, tag_id),
+		FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
+		FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+	)`)
+	if err != nil {
+		panic(err)
+	}
+}
