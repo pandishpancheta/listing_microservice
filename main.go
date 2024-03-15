@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/pandishpancheta/listing-service/pkg/ai"
 	"net"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -17,12 +18,14 @@ func main() {
 
 	db := db.Init(cfg)
 
+	model := ai.InitModel()
+
 	lis, err := net.Listen("tcp", "localhost:"+cfg.TCP_PORT)
 	if err != nil {
 		panic(err)
 	}
 
-	ls := services.NewListingsService(db, cfg)
+	ls := services.NewListingsService(db, cfg, model)
 
 	grpcServer := grpc.NewServer()
 
