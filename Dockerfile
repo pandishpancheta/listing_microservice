@@ -26,8 +26,8 @@ WORKDIR /root/
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
 
-# Expose port 50051 to the outside for protobuf tcp connection
-EXPOSE 50051
+# Expose port 50053 to the outside for protobuf tcp connection
+EXPOSE 50053
 
 # Command to run the executable
 CMD ["./main"] 
