@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/pandishpancheta/listing-service/pkg/ai"
 	"net"
+
+	"github.com/pandishpancheta/listing-service/pkg/ai"
 
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/pandishpancheta/listing-service/pkg/config"
@@ -18,7 +19,7 @@ func main() {
 
 	db := db.Init(cfg)
 
-	model := ai.InitModel()
+	model := ai.InitModel(cfg)
 
 	lis, err := net.Listen("tcp", "localhost:"+cfg.TCP_PORT)
 	if err != nil {

@@ -12,6 +12,8 @@ type Config struct {
 	DB_NAME string
 
 	TokenizationServiceAddress string
+
+	ApiKey string
 }
 
 func LoadConfig() *Config {
@@ -23,5 +25,6 @@ func LoadConfig() *Config {
 		DB_PASS:                    os.Getenv("DB_PASS"),
 		DB_NAME:                    os.Getenv("DB_NAME"),
 		TokenizationServiceAddress: os.Getenv("TOKENIZATION_SERVICE_ADDRESS"),
+		ApiKey:                     os.Getenv("API_KEY"),
 	}
 }
