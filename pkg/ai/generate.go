@@ -4,8 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/google/generative-ai-go/genai"
 	"log"
+
+	"github.com/google/generative-ai-go/genai"
 )
 
 func GenerateDescription(ctx context.Context, bytes []byte, model genai.GenerativeModel) string {
@@ -15,7 +16,6 @@ func GenerateDescription(ctx context.Context, bytes []byte, model genai.Generati
 		genai.Text("Describe the image."),
 	}
 	resp, err := model.GenerateContent(ctx, prompt...)
-
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -19,6 +19,6 @@ func InitModel(cfg *config.Config) *genai.GenerativeModel {
 	}
 	defer client.Close()
 
-	model := client.GenerativeModel("gemini-pro-vision")
+	model := client.GenerativeModel("gemini-1.0-pro")
 	return model
 }
