@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 type Config struct {
 	TCP_PORT string
@@ -18,13 +21,13 @@ type Config struct {
 
 func LoadConfig() *Config {
 	return &Config{
-		TCP_PORT:                   os.Getenv("TCP_PORT"),
-		DB_HOST:                    os.Getenv("DB_HOST"),
-		DB_PORT:                    os.Getenv("DB_PORT"),
-		DB_USER:                    os.Getenv("DB_USER"),
-		DB_PASS:                    os.Getenv("DB_PASS"),
-		DB_NAME:                    os.Getenv("DB_NAME"),
-		TokenizationServiceAddress: os.Getenv("TOKENIZATION_SERVICE_ADDRESS"),
-		ApiKey:                     os.Getenv("API_KEY"),
+		TCP_PORT:                   strings.TrimSpace(os.Getenv("TCP_PORT")),
+		DB_HOST:                    strings.TrimSpace(os.Getenv("DB_HOST")),
+		DB_PORT:                    strings.TrimSpace(os.Getenv("DB_PORT")),
+		DB_USER:                    strings.TrimSpace(os.Getenv("DB_USER")),
+		DB_PASS:                    strings.TrimSpace(os.Getenv("DB_PASS")),
+		DB_NAME:                    strings.TrimSpace(os.Getenv("DB_NAME")),
+		TokenizationServiceAddress: strings.TrimSpace(os.Getenv("TOKENIZATION_SERVICE_ADDRESS")),
+		ApiKey:                     strings.TrimSpace(os.Getenv("API_KEY")),
 	}
 }
