@@ -104,16 +104,31 @@ func (s *listingsService) CreateListing(ctx context.Context, req *pb.CreateListi
 
 func (s *listingsService) GetListing(ctx context.Context, req *pb.GetListingRequest) (*pb.GetListingResponse, error) {
 	var listing pb.GetListingResponse
-	err := s.db.QueryRowContext(ctx, "SELECT id, name, description, price FROM listings WHERE id = $1 AND status = $2", req.Id, "completed").Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price)
+	err := s.db.QueryRowContext(ctx, "SELECT l.id, l.name, l.description, l.price, l.uri, u.id, u.username FROM listings l JOIN users u ON l.user_id = u.id WHERE l.id = $1 AND l.status = $2", req.Id, "completed").Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price, &listing.Uri, &listing.UserId, &listing.Username)
 	if err != nil {
 		return nil, err
+	}
+
+	// Get tags
+	rows, err := s.db.QueryContext(ctx, "SELECT t.name FROM tags t JOIN listing_tags lt ON t.id = lt.tag_id WHERE lt.listing_id = $1", req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var tag string
+		err = rows.Scan(&tag)
+		if err != nil {
+			return nil, err
+		}
+		listing.TagNames = append(listing.TagNames, tag)
 	}
 
 	return &listing, nil
 }
 
 func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (*pb.GetListingsResponse, error) {
-	rows, err := s.db.QueryContext(ctx, "SELECT id, name, description, price FROM listings WHERE status = $1", "completed")
+	rows, err := s.db.QueryContext(ctx, "SELECT l.id, l.name, l.description, l.price, l.uri, u.id, u.username FROM listings l JOIN users u ON l.user_id = u.id WHERE status = $1", "completed")
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -125,12 +140,28 @@ func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (
 
 	var listings pb.GetListingsResponse
 	for rows.Next() {
-		var listing pb.Listing
-		err = rows.Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price)
+		var listing pb.GetListingResponse
+		err = rows.Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price, &listing.Uri, &listing.UserId, &listing.Username)
 		if err != nil {
 			log.Println(err)
 			return nil, err
 		}
+
+		// Get tags
+		tagRows, err := s.db.QueryContext(ctx, "SELECT t.name FROM tags t JOIN listing_tags lt ON t.id = lt.tag_id WHERE lt.listing_id = $1", listing.Id)
+		if err != nil {
+			return nil, err
+		}
+
+		for tagRows.Next() {
+			var tag string
+			err = tagRows.Scan(&tag)
+			if err != nil {
+				return nil, err
+			}
+			listing.TagNames = append(listing.TagNames, tag)
+		}
+
 		listings.Listings = append(listings.Listings, &listing)
 	}
 

@@ -56,12 +56,12 @@ message GetListingResponse {
     string price = 4;
     string uri = 5;
     repeated string tag_names = 6;
-    string created_at = 7;
-    string updated_at = 8;
+    string user_id = 7;
+    string username = 8;
 }
 
 message GetListingsResponse {
-    repeated Listing listings = 1;
+    repeated GetListingResponse listings = 1;
 }
 
 message UpdateListingRequest {
