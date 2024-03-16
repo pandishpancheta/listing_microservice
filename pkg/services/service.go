@@ -27,6 +27,7 @@ type ListingsService interface {
 	CreateListing(ctx context.Context, req *pb.CreateListingRequest) (*pb.CreateListingResponse, error)
 	GetListing(ctx context.Context, req *pb.GetListingRequest) (*pb.GetListingResponse, error)
 	GetListings(ctx context.Context, req *emptypb.Empty) (*pb.GetListingsResponse, error)
+	GetListingsByUser(ctx context.Context, req *pb.GetListingsByUserRequest) (*pb.GetListingsResponse, error)
 	UpdateListing(ctx context.Context, req *pb.UpdateListingRequest) (*pb.UpdateListingResponse, error)
 	UpdateListingStatus(ctx context.Context, req *pb.UpdateListingStatusRequest) (*pb.UpdateListingStatusResponse, error)
 	DeleteListing(ctx context.Context, req *pb.DeleteListingRequest) (*emptypb.Empty, error)
