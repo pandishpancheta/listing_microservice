@@ -17,6 +17,9 @@ type Config struct {
 	TokenizationServiceAddress string
 
 	ApiKey string
+
+	AUTHORIZATION string
+	COOKIE        string
 }
 
 func LoadConfig() *Config {
@@ -29,5 +32,7 @@ func LoadConfig() *Config {
 		DB_NAME:                    strings.TrimSuffix(os.Getenv("DB_NAME"), "\n"),
 		TokenizationServiceAddress: strings.TrimSuffix(os.Getenv("TOKENIZATION_SERVICE_ADDRESS"), "\n"),
 		ApiKey:                     strings.TrimSuffix(os.Getenv("API_KEY"), "\n"),
+		AUTHORIZATION:              strings.TrimSuffix(os.Getenv("AUTHORIZATION"), "\n"),
+		COOKIE:                     strings.TrimSuffix(os.Getenv("COOKIE"), "\n"),
 	}
 }

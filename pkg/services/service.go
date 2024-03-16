@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"database/sql"
+	"github.com/pandishpancheta/listing-service/pkg/ai"
 	"log"
 
 	"github.com/google/generative-ai-go/genai"
@@ -92,10 +93,9 @@ func (s *listingsService) CreateListing(ctx context.Context, req *pb.CreateListi
 		}
 	}
 
-	// desc := ai.GenerateDescription(ctx, req.Chunk, *s.model)
+	desc := ai.GenerateDescription(ctx, "https://emerald-efficient-caterpillar-983.mypinata.cloud/ipfs/"+uri, s.cfg)
 
-	// Insert into database
-	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, req.Description, uri, req.Price, "pending", req.UserId)
+	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, desc, uri, req.Price, "pending", req.UserId)
 	if err != nil {
 		return nil, err
 	}
