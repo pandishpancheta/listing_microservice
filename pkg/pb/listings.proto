@@ -26,6 +26,7 @@ service ListingsService {
     rpc CreateListing(CreateListingRequest) returns (CreateListingResponse) {}
     rpc GetListing(GetListingRequest) returns (GetListingResponse) {}
     rpc GetListings(google.protobuf.Empty) returns (GetListingsResponse) {}
+    rpc GetListingsByUser(GetListingsByUserRequest) returns (GetListingsResponse) {}
     rpc UpdateListing(UpdateListingRequest) returns (UpdateListingResponse) {}
     rpc UpdateListingStatus(UpdateListingStatusRequest) returns (UpdateListingStatusResponse) {}
     rpc DeleteListing(DeleteListingRequest) returns (google.protobuf.Empty) {}
@@ -47,6 +48,10 @@ message CreateListingResponse {
 
 message GetListingRequest {
     string id = 1;
+}
+
+message GetListingsByUserRequest {
+    string user_id = 1;
 }
 
 message GetListingResponse {

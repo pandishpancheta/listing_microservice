@@ -26,6 +26,7 @@ type ListingsServiceClient interface {
 	CreateListing(ctx context.Context, in *CreateListingRequest, opts ...grpc.CallOption) (*CreateListingResponse, error)
 	GetListing(ctx context.Context, in *GetListingRequest, opts ...grpc.CallOption) (*GetListingResponse, error)
 	GetListings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetListingsResponse, error)
+	GetListingsByUser(ctx context.Context, in *GetListingsByUserRequest, opts ...grpc.CallOption) (*GetListingsResponse, error)
 	UpdateListing(ctx context.Context, in *UpdateListingRequest, opts ...grpc.CallOption) (*UpdateListingResponse, error)
 	UpdateListingStatus(ctx context.Context, in *UpdateListingStatusRequest, opts ...grpc.CallOption) (*UpdateListingStatusResponse, error)
 	DeleteListing(ctx context.Context, in *DeleteListingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -66,6 +67,15 @@ func (c *listingsServiceClient) GetListings(ctx context.Context, in *emptypb.Emp
 	return out, nil
 }
 
+func (c *listingsServiceClient) GetListingsByUser(ctx context.Context, in *GetListingsByUserRequest, opts ...grpc.CallOption) (*GetListingsResponse, error) {
+	out := new(GetListingsResponse)
+	err := c.cc.Invoke(ctx, "/listings.ListingsService/GetListingsByUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *listingsServiceClient) UpdateListing(ctx context.Context, in *UpdateListingRequest, opts ...grpc.CallOption) (*UpdateListingResponse, error) {
 	out := new(UpdateListingResponse)
 	err := c.cc.Invoke(ctx, "/listings.ListingsService/UpdateListing", in, out, opts...)
@@ -100,6 +110,7 @@ type ListingsServiceServer interface {
 	CreateListing(context.Context, *CreateListingRequest) (*CreateListingResponse, error)
 	GetListing(context.Context, *GetListingRequest) (*GetListingResponse, error)
 	GetListings(context.Context, *emptypb.Empty) (*GetListingsResponse, error)
+	GetListingsByUser(context.Context, *GetListingsByUserRequest) (*GetListingsResponse, error)
 	UpdateListing(context.Context, *UpdateListingRequest) (*UpdateListingResponse, error)
 	UpdateListingStatus(context.Context, *UpdateListingStatusRequest) (*UpdateListingStatusResponse, error)
 	DeleteListing(context.Context, *DeleteListingRequest) (*emptypb.Empty, error)
@@ -117,6 +128,9 @@ func (UnimplementedListingsServiceServer) GetListing(context.Context, *GetListin
 }
 func (UnimplementedListingsServiceServer) GetListings(context.Context, *emptypb.Empty) (*GetListingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetListings not implemented")
+}
+func (UnimplementedListingsServiceServer) GetListingsByUser(context.Context, *GetListingsByUserRequest) (*GetListingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListingsByUser not implemented")
 }
 func (UnimplementedListingsServiceServer) UpdateListing(context.Context, *UpdateListingRequest) (*UpdateListingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateListing not implemented")
@@ -193,6 +207,24 @@ func _ListingsService_GetListings_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ListingsService_GetListingsByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetListingsByUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ListingsServiceServer).GetListingsByUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/listings.ListingsService/GetListingsByUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ListingsServiceServer).GetListingsByUser(ctx, req.(*GetListingsByUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ListingsService_UpdateListing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateListingRequest)
 	if err := dec(in); err != nil {
@@ -265,6 +297,10 @@ var ListingsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetListings",
 			Handler:    _ListingsService_GetListings_Handler,
+		},
+		{
+			MethodName: "GetListingsByUser",
+			Handler:    _ListingsService_GetListingsByUser_Handler,
 		},
 		{
 			MethodName: "UpdateListing",

@@ -168,6 +168,47 @@ func (s *listingsService) GetListings(ctx context.Context, req *emptypb.Empty) (
 	return &listings, nil
 }
 
+func (s *listingsService) GetListingsByUser(ctx context.Context, req *pb.GetListingsByUserRequest) (*pb.GetListingsResponse, error) {
+	rows, err := s.db.QueryContext(ctx, "SELECT l.id, l.name, l.description, l.price, l.uri, u.id, u.username FROM listings l JOIN users u ON l.user_id = u.id WHERE l.user_id = $1", req.UserId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+	defer rows.Close()
+
+	var listings pb.GetListingsResponse
+	for rows.Next() {
+		var listing pb.GetListingResponse
+		err = rows.Scan(&listing.Id, &listing.Name, &listing.Description, &listing.Price, &listing.Uri, &listing.UserId, &listing.Username)
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+
+		// Get tags
+		tagRows, err := s.db.QueryContext(ctx, "SELECT t.name FROM tags t JOIN listing_tags lt ON t.id = lt.tag_id WHERE lt.listing_id = $1", listing.Id)
+		if err != nil {
+			return nil, err
+		}
+
+		for tagRows.Next() {
+			var tag string
+			err = tagRows.Scan(&tag)
+			if err != nil {
+				return nil, err
+			}
+			listing.TagNames = append(listing.TagNames, tag)
+		}
+
+		listings.Listings = append(listings.Listings, &listing)
+	}
+
+	return &listings, nil
+}
+
 func (s *listingsService) UpdateListing(ctx context.Context, req *pb.UpdateListingRequest) (*pb.UpdateListingResponse, error) {
 	_, err := s.db.ExecContext(ctx, "UPDATE listings SET name = $1, description = $2, price = $3 WHERE id = $4 AND user_id = $5", req.Name, req.Description, req.Price, req.Id, req.UserId)
 	if err != nil {
