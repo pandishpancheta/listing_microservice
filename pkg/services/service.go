@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/google/generative-ai-go/genai"
-	"github.com/pandishpancheta/listing-service/pkg/ai"
 
 	"github.com/gofrs/uuid/v5"
 	"github.com/pandishpancheta/listing-service/pkg/config"
@@ -92,15 +91,15 @@ func (s *listingsService) CreateListing(ctx context.Context, req *pb.CreateListi
 		}
 	}
 
-	desc := ai.GenerateDescription(ctx, req.Chunk, *s.model)
+	// desc := ai.GenerateDescription(ctx, req.Chunk, *s.model)
 
 	// Insert into database
-	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, desc, uri, req.Price, "pending", req.UserId)
+	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, req.Description, uri, req.Price, "pending", req.UserId)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateListingResponse{Id: id.String()}, nil
+	return &pb.CreateListingResponse{Id: id.String(), Uri: uri}, nil
 }
 
 func (s *listingsService) GetListing(ctx context.Context, req *pb.GetListingRequest) (*pb.GetListingResponse, error) {

@@ -39,8 +39,10 @@ func InitTables(db *sql.DB) {
 		id UUID PRIMARY KEY,
 		name TEXT,
 		description TEXT,
-		price INT,
-		status TEXT
+		price NUMERIC,
+		status TEXT,
+		uri TEXT,
+		user_id UUID
 	)`)
 	if err != nil {
 		panic(err)
