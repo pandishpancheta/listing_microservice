@@ -3,8 +3,9 @@ package services
 import (
 	"context"
 	"database/sql"
-	"github.com/pandishpancheta/listing-service/pkg/ai"
 	"log"
+
+	"github.com/pandishpancheta/listing-service/pkg/ai"
 
 	"github.com/google/generative-ai-go/genai"
 
@@ -75,6 +76,13 @@ func (s *listingsService) CreateListing(ctx context.Context, req *pb.CreateListi
 
 	uri := tokenizeResponse.GetTokenURI()
 
+	desc := ai.GenerateDescription(ctx, "https://emerald-efficient-caterpillar-983.mypinata.cloud/ipfs/"+uri, s.cfg)
+
+	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, desc, uri, req.Price, "pending", req.UserId)
+	if err != nil {
+		return nil, err
+	}
+
 	// Iterate over tags and insert into database if they don't exist
 	for _, tag := range req.TagNames {
 		tid, err := uuid.NewV4()
@@ -82,22 +90,29 @@ func (s *listingsService) CreateListing(ctx context.Context, req *pb.CreateListi
 			return nil, err
 		}
 
-		_, err = s.db.ExecContext(ctx, "INSERT INTO tags (id, name) VALUES ($1, $2) ON CONFLICT DO NOTHING", tid, tag)
+		// Check if tag already exists
+		var existingTid uuid.UUID
+		err = s.db.QueryRowContext(ctx, "SELECT id FROM tags WHERE name = $1", tag).Scan(&existingTid)
 		if err != nil {
-			return nil, err
+			if err == sql.ErrNoRows {
+				// If tag does not exist, insert it
+				_, err = s.db.ExecContext(ctx, "INSERT INTO tags (id, name) VALUES ($1, $2)", tid, tag)
+				if err != nil {
+					return nil, err
+				}
+			} else {
+				// If there is an error other than ErrNoRows, return it
+				return nil, err
+			}
+		} else {
+			// If tag exists, overwrite tid with existing tag id
+			tid = existingTid
 		}
 
 		_, err = s.db.ExecContext(ctx, "INSERT INTO listing_tags (listing_id, tag_id) VALUES ($1, $2)", id, tid)
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	desc := ai.GenerateDescription(ctx, "https://emerald-efficient-caterpillar-983.mypinata.cloud/ipfs/"+uri, s.cfg)
-
-	_, err = s.db.ExecContext(ctx, "INSERT INTO listings (id, name, description, uri, price, status, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", id, req.Name, desc, uri, req.Price, "pending", req.UserId)
-	if err != nil {
-		return nil, err
 	}
 
 	return &pb.CreateListingResponse{Id: id.String(), Uri: uri}, nil
